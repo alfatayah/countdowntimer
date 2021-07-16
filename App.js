@@ -16,26 +16,21 @@ import {
   View,
   Alert,
   Modal,
-  Pressable
+  Pressable,
+  Image,
 } from 'react-native';
 export default class App extends Component {
-
-
-
   constructor(props) {
     super(props);
     this.state= {
       modalVisible: false,
+      // setting minutes and timer in countdown
       timer: 5,
       minutes: 2,
       interval: '',
       timeout: '',
       interval : '',
     }
-  }
-
-  componentDidMount = () => {
-   
   }
 
   setModalVisible = (visible) => {
@@ -74,8 +69,6 @@ export default class App extends Component {
       );
   }
 
- 
-
   refreshQrCode = () => {
     this.setState({ timer: 5 , minutes : 2 })
     this.CounterInterval();
@@ -85,56 +78,59 @@ export default class App extends Component {
     const { modalVisible ,timer, minutes} = this.state;
     return (
       <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-          this.setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Hello Bitch!</Text>
-            <Text style={styles.modalText}>Kode QR akan berakhir dalam  <Text style={{color: "#002f5f"}}>{minutes}:{timer}</Text> </Text>
-              {minutes == 0  &&  timer == 0 ? (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              {minutes == 0 && timer == 0 ? (
+                <Text style={styles.modalText}>Please update your QR code </Text>
+              ) : (
+                <Text style={styles.modalText}>QR Code will end in  <Text style={{ color: "#002f5f" }}>{minutes}:{timer}</Text> </Text>
+              )
+              }
+              {minutes == 0 && timer == 0 ? (
                 <View>
                   <Pressable
                     style={[styles.button, styles.buttonClose]}
                     onPress={() => this.refreshQrCode()}
                   >
-                    <Text style={styles.textStyle}>Perbaharui QR CODE</Text>
+                    <Text style={styles.textStyle}>Update QR CODE</Text>
+
                   </Pressable>
                 </View>
               ) : (
-                <View>
-                  <Text> QR CODE</Text>
-                </View>
+                <Image
+                  style={styles.imageQR}
+                  source={require('./assets/qrcode.png')}
+                />
               )
               }
-
-              <View style={{marginTop: 20}}></View>
-
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => this.setModalClose()}
-            >
-              <Text style={styles.textStyle}>Exit</Text>
-            </Pressable>
+              <View style={{ marginTop: 20 }}></View>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => this.setModalClose()}
+              >
+                <Text style={styles.textStyle}>Exit</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
-      </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => this.setModalVisible()}
-      >
-        <Text style={styles.textStyle}>Show QR CODE</Text>
-      </Pressable>
-    </View>
+        </Modal>
+        <Pressable
+          style={[styles.button, styles.buttonOpen]}
+          onPress={() => this.setModalVisible()}
+        >
+          <Text style={styles.textStyle}>Show QR CODE</Text>
+        </Pressable>
+      </View>
     )
   }
-
 
 }
 
@@ -146,7 +142,6 @@ const styles = StyleSheet.create({
     marginTop: 22
   },
   modalView: {
-    // margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
     padding: 35,
@@ -160,7 +155,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: 300,
-    height: 250,
+    height: 280,
   },
   button: {
     borderRadius: 20,
@@ -181,5 +176,11 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: "center"
+  },
+  imageQR:{
+    width: 200,
+    height: 140,
+    alignSelf: 'center',
+    resizeMode: 'contain'
   }
 });
